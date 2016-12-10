@@ -47,12 +47,14 @@ def _test_srtm_retrieve(Source, read_SRTM, max_, min_, pt):
         assert img[-10, 12] == pt, msg.format(img[-10, 12])
 
 
+@unittest.skip('SRTM source requires login.')
 def test_srtm3_retrieve():
     _test_srtm_retrieve(cartopy.io.srtm.SRTM3Source,
                         cartopy.io.srtm.read_SRTM3,
                         602, -34, 78)
 
 
+@unittest.skip('SRTM source requires login.')
 def test_srtm1_retrieve():
     _test_srtm_retrieve(cartopy.io.srtm.SRTM1Source,
                         cartopy.io.srtm.read_SRTM1,
@@ -65,15 +67,17 @@ def _test_srtm_out_of_range(Source, shape):
     assert_array_equal(img, np.zeros(np.array(shape) * 2))
 
 
+@unittest.skip('SRTM source requires login.')
 def test_srtm3_out_of_range():
     _test_srtm_out_of_range(cartopy.io.srtm.SRTM3Source, (1201, 1201))
 
 
+@unittest.skip('SRTM source requires login.')
 def test_srtm1_out_of_range():
     _test_srtm_out_of_range(cartopy.io.srtm.SRTM1Source, (3601, 3601))
 
 
-@unittest.expectedFailure
+@unittest.skip('SRTM source requires login.')
 class TestSRTMSource__single_tile(unittest.TestCase):
     def _out_of_range(self, source):
         msg = 'No srtm tile found for those coordinates.'
@@ -111,7 +115,7 @@ class TestSRTMSource__single_tile(unittest.TestCase):
         self._zeros(cartopy.io.srtm.SRTM1Source())
 
 
-@unittest.expectedFailure
+@unittest.skip('SRTM source requires login.')
 class TestSRTMSource__combined(unittest.TestCase):
     def _trivial(self, source):
         e_img, e_crs, e_extent = source.single_tile(-3, 50)
@@ -140,7 +144,7 @@ class TestSRTMSource__combined(unittest.TestCase):
         self._2by2(cartopy.io.srtm.SRTM1Source())
 
 
-@unittest.expectedFailure
+@unittest.skip('SRTM source requires login.')
 class TestSRTM3Source_fetch_raster(unittest.TestCase):
     def _as_combined(self, source):
         e_img, e_crs, e_extent = source.combined(-1, 50, 2, 1)
