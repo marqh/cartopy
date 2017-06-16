@@ -192,8 +192,9 @@ class GoogleTiles(object):
     def get_image(self, tile):
         url = self._image_url(tile)
         response = requests.get(url)
+
         if response.status_code != 200:
-            raise ValueError('{} failed to resolve, with response code{} '
+            raise ValueError('{} failed to resolve, with response code {} '
                              '.'.format(url, response.status_code))
 
         fh = response.raw

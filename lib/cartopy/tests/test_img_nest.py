@@ -346,6 +346,9 @@ def requires_wmts_data(function):
             with open(data_version_fname, 'w') as fh:
                 fh.write(str(_TEST_DATA_VERSION))
 
+    global _TEST_DATA_AVAILABLE
+    _TEST_DATA_AVAILABLE = True
+
     # Download the tiles.
     for tile in tiles:
         x, y, z = tile
@@ -353,8 +356,14 @@ def requires_wmts_data(function):
         if not os.path.exists(fname):
             if not os.path.isdir(os.path.dirname(fname)):
                 os.makedirs(os.path.dirname(fname))
-
-            img, extent, _ = aerial.get_image(tile)
+            try:
+                img, extent, _ = aerial.get_image(tile)
+            except ValueError as err:
+                exp = ['failed', 'to', 'resolve,', 'with', 'response', 'code']
+                if not str(err).split(' ')[1:-2] == exp:
+                    raise ValueError(str(err))
+                else:
+                    _TEST_DATA_AVAILABLE = False
             nx, ny = 256, 256
             x_rng = extent[1] - extent[0]
             y_rng = extent[3] - extent[2]
@@ -376,8 +385,6 @@ def requires_wmts_data(function):
             _save_world(pgw_fname, pgw_keys)
             img.save(fname)
 
-    global _TEST_DATA_AVAILABLE
-    _TEST_DATA_AVAILABLE = True
 
     return function
 
