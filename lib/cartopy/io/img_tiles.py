@@ -32,6 +32,7 @@ from __future__ import (absolute_import, division, print_function)
 from PIL import Image
 import shapely.geometry as sgeom
 import numpy as np
+import requests
 import six
 import warnings
 
@@ -189,16 +190,14 @@ class GoogleTiles(object):
         return url
 
     def get_image(self, tile):
-        if six.PY3:
-            from urllib.request import urlopen
-        else:
-            from urllib2 import urlopen
-
         url = self._image_url(tile)
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise ValueError('{} failed to resolve, with response code{} '
+                             '.'.format(url, response.status_code))
 
-        fh = urlopen(url)
+        fh = response.raw
         im_data = six.BytesIO(fh.read())
-        fh.close()
         img = Image.open(im_data)
 
         img = img.convert(self.desired_tile_form)
